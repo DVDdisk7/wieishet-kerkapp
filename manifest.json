@@ -1,0 +1,38 @@
+{
+  "name": "Wie is Het? - Kerkapp editie",
+  "short_name": "Wie is Het? - Kerkapp",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "description": "Wat is er leuker dan Wie is Het? spelen met mensen uit de gemeente? Zit deze persoon aan de linkerkant van de kerk? Heeft deze persoon altijd een mentos rol mee? Speel het spel en leer elkaar beter kennen!",
+  "lang": "nl",
+  "dir": "auto",
+  "theme_color": "#274531",
+  "background_color": "#274531",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "img/manifest-icon-192.maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "img/manifest-icon-192.maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "img/manifest-icon-512.maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "img/manifest-icon-512.maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
