@@ -8,6 +8,7 @@
     <link rel="manifest" href="manifest.json" /> 
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" type="image/x-icon" href="/img/app-icon.jpeg">
+    <script src="js/sweetalert2.all.min.js"></script>
 </head>
 
 <body>
@@ -22,13 +23,32 @@
     </div>
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js').then(function(registration) {
-                console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            }, function(error) {
-                console.log('ServiceWorker registration failed: ', error);
-            });
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(registration => {
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed') {
+                                if (navigator.serviceWorker.controller) {
+                                    Swal.fire({
+                                        title: 'Er is een nieuwe versie van de app beschikbaar.',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Ververs',
+                                        cancelButtonText: 'Later'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            window.location.reload();
+                                        }
+                                    }
+                                    )
+                                }
+                            }
+                        });
+                    });
+                });
         }
     </script>
+    <pwa-update></pwa-update>
 </body>
 
 </html>

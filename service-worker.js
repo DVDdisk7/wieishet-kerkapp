@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v1.1';  // Verander dit om de cache te vernieuwen
+const CACHE_VERSION = 'v1.2-DEV2';  // Verander dit om de cache te vernieuwen
 const CACHE_NAME = `wie-is-het-kerkapp-${CACHE_VERSION}`;
 const urlsToCache = [
     '/',
@@ -7,6 +7,7 @@ const urlsToCache = [
     '/css/MuseoSans-500.ttf',
     '/css/MuseoSans-700.ttf',
     '/js/app.js',
+    '/js/sweetalert2.all.min.js',
     '/views/login.html',
     '/views/start.html',
     '/views/select.html',
