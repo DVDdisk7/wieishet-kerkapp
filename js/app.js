@@ -6,11 +6,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedPerson = null;
     let currentPage = '';
 
-    function loadPage(page) {
+    function navigate(page) {
         // If there is no token in local storage, navigate to login page
         if (!localStorage.getItem('token')) {
             page = 'login';
         }
+
+        // If the device is in landscape mode and smaller than 800px, open full screen
+        if (window.screen.width > window.screen.height && window.Screen.width < 800) {
+            openFullScreen();
+        }
+
         fetch(`/views/${page}.html`)
             .then(response => response.text())
             .then(html => {
@@ -21,10 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (page === 'select') initSelect();
                 if (page === 'game') initGame();
             });
-    }
 
-    function navigate(page) {
-        loadPage(page);
     }
 
     function initLogin() {
@@ -77,29 +80,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Start game
-        document.getElementById('start-game').addEventListener('click', () => openFullScreen());
-        document.getElementById('start-game').addEventListener('click', () => navigate('select'));
+        document.getElementById('start-game').addEventListener('click', () => {
+            if (localStorage.getItem('selectedPerson')) {
+                Swal.fire({
+                    title: 'Er is nog een spel bezig, wil je een nieuw spel starten?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ja',
+                    cancelButtonText: 'Nee'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        localStorage.removeItem('selectedPerson');
+                        localStorage.removeItem('smoelenboek');
+                        navigate('select');
+                    } else {
+                        navigate('game');
+                    }
+                }
+                )
+            } else {
+                navigate('select');
+            }
+        });
     }
 
     function initSelect() {
         // Check if a game is already in progress
-        if (localStorage.getItem('selectedPerson')) {
-            Swal.fire({
-                title: 'Er is nog een spel bezig, wil je een nieuw spel starten?',
-                showCancelButton: true,
-                confirmButtonText: 'Ja',
-                cancelButtonText: 'Nee'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    localStorage.removeItem('selectedPerson');
-                    localStorage.removeItem('smoelenboek');
-                } else {
-                    navigate('game');
-                    return;
-                }
-            }
-            )
-        }
 
         closeGameButton();
 
@@ -132,6 +137,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Sort smoelenboek by lastname
                 smoelenboek.sort((a, b) => a.lastName.localeCompare(b.lastName));
 
+                // save smoelenboek in local storage
+                localStorage.setItem('smoelenboek', JSON.stringify(smoelenboek));
+
                 // Display smoelenboek
                 const selectionBoard = document.getElementById('selection-board');
                 selectionBoard.innerHTML = '';
@@ -142,9 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     card.addEventListener('click', () => selectPerson(index, card));
                     selectionBoard.appendChild(card);
                 });
-
-                // save smoelenboek in local storage
-                localStorage.setItem('smoelenboek', JSON.stringify(smoelenboek));
             })
             .catch(error => {
                 Swal.fire({
@@ -182,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initGame() {
         closeGameButton();
-        
+
         // Get game data
         const user = JSON.parse(localStorage.getItem('user'));
         const smoelenboek = JSON.parse(localStorage.getItem('smoelenboek'));
@@ -225,10 +230,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add event listener to close game button
         document.getElementById('closeGame').addEventListener('click', () => {
             Swal.fire({
-                 title: 'Weet je zeker dat je het spel wilt afsluiten?',
-                 showCancelButton: true,
-                    confirmButtonText: 'Ja',
-                    cancelButtonText: 'Nee'
+                title: 'Weet je zeker dat je het spel wilt afsluiten?',
+                showCancelButton: true,
+                confirmButtonText: 'Ja',
+                cancelButtonText: 'Nee'
             }).then((result) => {
                 if (result.isConfirmed) {
                     localStorage.removeItem('selectedPerson');
@@ -255,5 +260,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const initialPage = 'start';
-    loadPage(initialPage);
+    navigate(initialPage);
 });
