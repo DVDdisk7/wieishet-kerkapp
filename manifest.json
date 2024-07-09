@@ -1,7 +1,9 @@
 {
   "name": "Wie is Het? - Kerkapp editie",
   "short_name": "Wie is Het? - Kerkapp",
-  "start_url": "/index.html",
+  "author": "David Jongeneel",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "description": "Wat is er leuker dan Wie is Het? spelen met mensen uit de gemeente? Zit deze persoon aan de linkerkant van de kerk? Heeft deze persoon altijd een mentos rol mee? Speel het spel en leer elkaar beter kennen!",
   "lang": "nl",
