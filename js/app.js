@@ -103,6 +103,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                         )
                     }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Inloggen mislukt',
+                        text: 'Controleer je gegevens en probeer het opnieuw.'
+                    }
+                    )
                 });
         });
     }
@@ -117,8 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Log out
         document.getElementById('logout').addEventListener('click', () => {
-            localStorage.clear();
-            navigate('login');
+            logout();
         });
 
         // Start game
@@ -147,7 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initSelect() {
         // Check if a game is already in progress
-
         initCloseGameButton();
 
         // Get smoelenboek data
@@ -200,9 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: 'Log opnieuw in om verder te gaan.'
                 }
                 )
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                navigate('login');
+                logout();
             });
 
         document.getElementById('confirm-selection').addEventListener('click', () => {
@@ -314,6 +318,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (elem.requestFullscreen) {
             elem.requestFullscreen().catch(err => { log('Fullscreen not supported') });
         }
+    }
+
+    function logout() {
+        localStorage.clear();
+        navigate('login');
     }
 
     function log(msg, err = false) {
