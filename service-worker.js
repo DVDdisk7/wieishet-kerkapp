@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v1.5';  // Verander dit om de cache te vernieuwen
+const CACHE_VERSION = 'v1.6';  // Verander dit om de cache te vernieuwen
 const CACHE_NAME = `wie-is-het-kerkapp-${CACHE_VERSION}`;
 const urlsToCache = [
     '/',
@@ -44,6 +44,10 @@ self.addEventListener('fetch', event => {
         caches.match(event.request).then(response => {
             return response || fetch(event.request).then(fetchResponse => {
                 return caches.open(CACHE_NAME).then(cache => {
+                    // skip POST requests
+                    if (event.request.method !== 'GET') {
+                        return fetchResponse;
+                    }
                     cache.put(event.request, fetchResponse.clone());
                     return fetchResponse;
                 });
