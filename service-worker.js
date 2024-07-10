@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v1.4';  // Verander dit om de cache te vernieuwen
+const CACHE_VERSION = 'v1.5';  // Verander dit om de cache te vernieuwen
 const CACHE_NAME = `wie-is-het-kerkapp-${CACHE_VERSION}`;
 const urlsToCache = [
     '/',
@@ -15,6 +15,7 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', event => {
+    self.skipWaiting();
     // Open de cache en voeg alle bestanden toe
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => {

@@ -58,7 +58,7 @@ body {
 
 .title {
     font-size: 13pt;
-    margin: 10px 0 0px 0px;
+    margin: 10px 0px 0px 0px;
 }
 
 .titlebar {
@@ -68,7 +68,7 @@ body {
     align-items: center;
     align-content: center;
     flex-wrap: wrap;
-    padding: 0px 20px;
+    /* padding: 0px 20px; */
     gap: 0px 20px;
 }
 
@@ -84,12 +84,16 @@ button {
     border-radius: 5px;
     background-color: #E8B445 !important;
     color: white;
-    padding: 10px 100px;
+    padding: 10px 15px;
     font-size: 15pt;
 }
 
 button:hover {
     background-color: #ffae00 !important;
+}
+
+button:disabled {
+    background-color: #bbb7ad !important;
 }
 
 @keyframes fadeIn {
@@ -105,11 +109,9 @@ button:hover {
     display: none;
 }
 
-.container {
-    z-index: 999;
-    position: relative;
-    background-color: #27453142;
-    padding: 0px 0px 30% 0px;
+.button-group {
+    display: flex;
+    gap: 10px;
 }
 
 /* Header Styles */
@@ -159,10 +161,6 @@ header button {
     margin: 20px 0px 0px 0px;
 }
 
-#confirm-selection {
-    margin: -20px 0px 0px 0px;
-}
-
 /* Login */
 .login {
     display: flex;
@@ -191,18 +189,42 @@ header button {
     font-size: 12pt;
 }
 
+/* start */
+
+#start-game {
+    max-width: 400px;
+    width: 50%;
+    min-width: 100px;
+}
+
+/* grid */
+
+.grid {
+    display: grid;
+    z-index: 999;
+    position: relative;
+    background-color: #27453142;
+    height: calc(100dvh - 60px); /* Ensure the grid takes full height of its container */
+    gap: 10px;
+    padding: 0px 12px 20px 12px;
+    justify-items: center;
+    grid-template-areas: "titlebar" "playerboard" "button";
+}
+
+.grid #game-board {
+    grid-area: playerboard / button;
+}
+
 /* Playerboard */  
 
 .playerboardView {
     display: flex;
     align-items: stretch;
-    gap: 20px;
+    gap: 15px;
     flex-wrap: wrap;
     justify-content: center;
-    margin: 20px 5px;
     z-index: 2;
     position: relative;
-    height: calc(100vh - 280px);
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -234,7 +256,7 @@ header button {
     color: white;
 }
 
-/* Gameboard */
+/* Game */
 .game-details {
     display: flex;
     align-items: center;
@@ -242,7 +264,7 @@ header button {
     gap: 20px;
 }
 
-.game-details .selectedPerson {
+.game-details .selected-person {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -289,12 +311,4 @@ header button {
     .split-horizontal {
         flex-direction: column;
     }
-}
-
-@media screen and (min-width: 600px) {
-
-    .playerboardView {
-        height: calc(100vh - 200px);
-    }
-    
 }

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wie is Het?</title>
-    <link rel="manifest" href="manifest.json" /> 
+    <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" type="image/x-icon" href="/img/app-icon.jpeg">
     <script src="js/sweetalert2.all.min.js"></script>
@@ -32,9 +32,8 @@
                                 if (navigator.serviceWorker.controller) {
                                     Swal.fire({
                                         title: 'Er is een nieuwe versie van de app beschikbaar.',
-                                        showCancelButton: true,
-                                        confirmButtonText: 'Ververs',
-                                        cancelButtonText: 'Later'
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Ververs'
                                     }).then((result) => {
                                         if (result.isConfirmed) {
                                             window.location.reload();

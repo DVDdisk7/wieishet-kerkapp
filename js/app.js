@@ -1,21 +1,60 @@
 // js/app.js
 const applicationId = "app.donkeymobile.pknoudalblas";
+const debug = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
     let selectedPerson = null;
-    let currentPage = '';
 
-    function navigate(page) {
+    async function navigate(page) {
+        log(`Navigating to ${page}`);
+
+        if (!localStorage.getItem('token')) {
+            log('User is not signed in');
+            page = 'login';
+        }
+
+        if (window.screen.width > window.screen.height && window.screen.height < 400 && window.screen.width < 1000) {
+            log('Small device screen, trying to open full screen');
+            openFullScreen();
+        }
+
+        app.classList.remove('fade-in'); // Verwijder de fade-in klasse om de animatie te resetten
+        app.style.opacity = 0; // Set opacity to 0 to start the fade-in effect
+
+        const response = await fetch(`/views/${page}.html`);
+        const html = await response.text();
+        app.innerHTML = html;
+        currentPage = page;
+
+        // Zorg ervoor dat de init functies async zijn als ze asynchrone operaties uitvoeren
+        if (page === 'login') await initLogin();
+        if (page === 'start') await initStart();
+        if (page === 'select') await initSelect();
+        if (page === 'game') await initGame();
+
+        // Pas de fade-in animatie toe na het laden en initialiseren
+        app.style.opacity = 1; // Reset opacity to 1 after loading new content
+        app.classList.add('fade-in'); // Apply fade-in animation
+    }
+
+    /* function navigate(page) {
+        log(`Navigating to ${page}`);
+
         // If there is no token in local storage, navigate to login page
         if (!localStorage.getItem('token')) {
+            log('User is not signed in')
             page = 'login';
         }
 
         // If the device is in landscape mode and smaller than 800px, open full screen
-        if (window.screen.width > window.screen.height && window.Screen.width < 800) {
+        if (window.screen.width > window.screen.height && window.screen.height < 400 && window.screen.width < 1000) {
+            log('Small device screen, trying to open full screen')
             openFullScreen();
         }
+
+        app.classList.remove('fade-in'); // Verwijder de fade-in klasse om de animatie te resetten
+        app.style.opacity = 0; // Set opacity to 0 to start the fade-in effect
 
         fetch(`/views/${page}.html`)
             .then(response => response.text())
@@ -26,9 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (page === 'start') initStart();
                 if (page === 'select') initSelect();
                 if (page === 'game') initGame();
+ 
+                app.style.opacity = 1; // Reset opacity to 1 after loading new content
+                app.classList.add('fade-in'); // Apply fade-in animation
             });
 
-    }
+    } */
 
     function initLogin() {
         // Handle login form submission
@@ -106,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function initSelect() {
         // Check if a game is already in progress
 
-        closeGameButton();
+        initCloseGameButton();
 
         // Get smoelenboek data
         const accessToken = localStorage.getItem('token');
@@ -175,6 +217,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 )
             }
         });
+
+        document.getElementById('choose-random').addEventListener('click', () => {
+            const randomIndex = Math.floor(Math.random() * smoelenboek.length);
+            localStorage.setItem('selectedPerson', JSON.stringify(smoelenboek[randomIndex]));
+            navigate('game');
+        });
     }
 
     function selectPerson(index, card) {
@@ -183,10 +231,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         selectedPerson = index;
         card.classList.add('selected');
+        document.getElementById('confirm-selection').removeAttribute('disabled');
     }
 
     function initGame() {
-        closeGameButton();
+        // Set event listener for close game button
+        initCloseGameButton();
 
         // Get game data
         const user = JSON.parse(localStorage.getItem('user'));
@@ -209,6 +259,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (person.crossedOff) card.classList.add('crossed-off');
             gameBoard.appendChild(card);
         });
+
+        // Create event listener for selecter-person card
+        const selectedPersonCard = document.getElementById('selected-person');
+        selectedPersonCard.addEventListener('click', () => {
+            // Create a bigger image preview popup
+            Swal.fire({
+                imageUrl: `https://cdn.donkeymobile.com/${selectedPerson.imageKey}`,
+                imageAlt: `${selectedPerson.firstName} ${selectedPerson.lastName}`,
+                text: `${selectedPerson.firstName} ${selectedPerson.lastName}`,
+                showCloseButton: true,
+                showConfirmButton: false
+            });
+        });
     }
 
     function crossOff(index, card) {
@@ -226,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function closeGameButton() {
+    function initCloseGameButton() {
         // Add event listener to close game button
         document.getElementById('closeGame').addEventListener('click', () => {
             Swal.fire({
@@ -249,13 +312,21 @@ document.addEventListener('DOMContentLoaded', () => {
     function openFullScreen() {
         const elem = document.documentElement;
         if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.mozRequestFullScreen) {
-            elem.mozRequestFullScreen();
-        } else if (elem.webkitRequestFullscreen) {
-            elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) {
-            elem.msRequestFullscreen();
+            elem.requestFullscreen().catch(err => { log('Fullscreen not supported') });
+        }
+    }
+
+    function log(msg, err = false) {
+        if (debug) {
+            // timestamp log message
+            const date = new Date();
+            const timestamp = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+            msg = `${timestamp} - [DEBUG] ${msg}`;
+            if (err) {
+                console.error(msg);
+            } else {
+                console.log(msg);
+            }
         }
     }
 
