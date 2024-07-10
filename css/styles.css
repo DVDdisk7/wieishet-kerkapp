@@ -64,12 +64,12 @@ body {
 .titlebar {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
     align-items: center;
     align-content: center;
     flex-wrap: wrap;
     /* padding: 0px 20px; */
-    gap: 0px 20px;
+    gap: 0px 40px;
+    justify-content: space-evenly;
 }
 
 .footer {
@@ -307,5 +307,11 @@ header button {
 @media screen and (min-height: 400px) {
     .img-header img {
         width: 50%;
+    }
+}
+
+@media screen and (min-width: 760px) and (min-height: 500px){
+    .split-horizontal {
+        flex-direction: column;
     }
 }
