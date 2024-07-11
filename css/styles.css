@@ -45,6 +45,11 @@ p, a, span, label, input, button{
 
 /* Global Styles */
 
+html {
+    min-height: calc(100% + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
 body {
     font-family: MuseoSans-500, Arial;
     text-align: center;
@@ -168,7 +173,6 @@ header button {
     align-items: center;
     gap: 20px;
     padding: 20px 0px;
-    width: 100%;
 }
 
 .login form {
@@ -176,7 +180,7 @@ header button {
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
-    width: 90%;
+    width: 100%;
     max-width: 400px;
 }
 
@@ -201,19 +205,15 @@ header button {
 /* grid */
 
 .grid {
-    display: grid;
     z-index: 999;
     position: relative;
     background-color: #27453142;
-    height: calc(100dvh - 60px); /* Ensure the grid takes full height of its container */
+    height: calc(100dvh - 60px);
     gap: 10px;
     padding: 0px 12px 20px 12px;
-    justify-items: center;
-    grid-template-areas: "titlebar" "playerboard" "button";
-}
-
-.grid #game-board {
-    grid-area: playerboard / button;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 
 /* Playerboard */  

@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
             page = 'login';
         }
 
-        if (window.screen.width > window.screen.height && window.screen.height < 400 && window.screen.width < 1000) {
+        if (window.screen.width > window.screen.height && window.screen.height < 600 && window.screen.width < 1000) {
             log('Small device screen, trying to open full screen');
             openFullScreen();
         }
@@ -37,40 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
         app.style.opacity = 1; // Reset opacity to 1 after loading new content
         app.classList.add('fade-in'); // Apply fade-in animation
     }
-
-    /* function navigate(page) {
-        log(`Navigating to ${page}`);
-
-        // If there is no token in local storage, navigate to login page
-        if (!localStorage.getItem('token')) {
-            log('User is not signed in')
-            page = 'login';
-        }
-
-        // If the device is in landscape mode and smaller than 800px, open full screen
-        if (window.screen.width > window.screen.height && window.screen.height < 400 && window.screen.width < 1000) {
-            log('Small device screen, trying to open full screen')
-            openFullScreen();
-        }
-
-        app.classList.remove('fade-in'); // Verwijder de fade-in klasse om de animatie te resetten
-        app.style.opacity = 0; // Set opacity to 0 to start the fade-in effect
-
-        fetch(`/views/${page}.html`)
-            .then(response => response.text())
-            .then(html => {
-                app.innerHTML = html;
-                currentPage = page;
-                if (page === 'login') initLogin();
-                if (page === 'start') initStart();
-                if (page === 'select') initSelect();
-                if (page === 'game') initGame();
- 
-                app.style.opacity = 1; // Reset opacity to 1 after loading new content
-                app.classList.add('fade-in'); // Apply fade-in animation
-            });
-
-    } */
 
     function initLogin() {
         // Handle login form submission
@@ -317,6 +283,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const elem = document.documentElement;
         if (elem.requestFullscreen) {
             elem.requestFullscreen().catch(err => { log('Fullscreen not supported') });
+        } else if (elem.mozRequestFullScreen) { /* Firefox */
+            elem.mozRequestFullScreen().catch(err => { log('Fullscreen not supported') });
+        } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+            elem.webkitRequestFullscreen().catch(err => { log('Fullscreen not supported') });
+        } else if (elem.msRequestFullscreen) { /* IE/Edge */
+            elem.msRequestFullscreen().catch(err => { log('Fullscreen not supported') });
+        } else {
+            log('Fullscreen not supported');
         }
     }
 
