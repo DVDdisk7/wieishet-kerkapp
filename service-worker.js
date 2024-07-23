@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v1.10';  // Verander dit om de cache te vernieuwen
+const CACHE_VERSION = 'v1.11';  // Verander dit om de cache te vernieuwen
 const CACHE_NAME = `wie-is-het-kerkapp-${CACHE_VERSION}`;
 const urlsToCache = [
     '/',

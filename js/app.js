@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function initSelect() {
-        // Check if a game is already in progress
+        // Set event listener for close game button
         initCloseGameButton();
 
         // Get smoelenboek data
@@ -209,7 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
         initCloseGameButton();
 
         // Get game data
-        const user = JSON.parse(localStorage.getItem('user'));
         const smoelenboek = JSON.parse(localStorage.getItem('smoelenboek'));
         const selectedPerson = JSON.parse(localStorage.getItem('selectedPerson'));
 
@@ -242,6 +241,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 showConfirmButton: false
             });
         });
+
+        // Create event listener for hide/show crossed off cards button
+        const toggleCrossedOffButton = document.getElementById('toggle-crossed-off');
+        var toggleCrossedOff = localStorage.getItem('toggleCrossedOff');
+
+        console.log(toggleCrossedOff);
+
+        if (toggleCrossedOff == 'true') {
+            toggleCrossedOffButton.innerText = 'Toon afgestreepte kaarten';
+
+            const crossedOffCards = document.querySelectorAll('.person-card.crossed-off');
+            crossedOffCards.forEach(card => {
+                card.classList.add('fade-out');
+            });
+        }
+
+        toggleCrossedOffButton.addEventListener('click', () => {
+            var toggleCrossedOff = localStorage.getItem('toggleCrossedOff');
+            if (toggleCrossedOff == 'false') {
+                localStorage.setItem('toggleCrossedOff', 'true');
+                toggleCrossedOffButton.innerText = 'Toon afgestreepte kaarten';
+
+                const crossedOffCards = document.querySelectorAll('.person-card.crossed-off');
+                crossedOffCards.forEach(card => {
+                    card.classList.add('fade-out');
+                });
+            } else {
+                localStorage.setItem('toggleCrossedOff', 'false');
+                toggleCrossedOffButton.innerText = 'Verberg afgestreepte kaarten';
+
+                const crossedOffCards = document.querySelectorAll('.person-card.crossed-off');
+                crossedOffCards.forEach(card => {
+                    card.classList.remove('fade-out');
+                });
+            }
+        });
     }
 
     function crossOff(index, card) {
@@ -256,6 +291,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const smoelenboek = JSON.parse(localStorage.getItem('smoelenboek'));
             smoelenboek[index].crossedOff = true;
             localStorage.setItem('smoelenboek', JSON.stringify(smoelenboek));
+
+            // If crossed cards are hidden, hide the crossed card
+            var toggleCrossedOff = localStorage.getItem('toggleCrossedOff');
+            if (toggleCrossedOff == "true") {
+                card.classList.add('fade-out');
+            }
         }
     }
 

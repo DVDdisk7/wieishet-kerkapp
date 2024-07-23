@@ -106,8 +106,20 @@ button:disabled {
     to { opacity: 1; }
 }
 
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0;
+        display: none;
+        width: 0px !important;
+        height: 0px !important;}
+}
+
 .fade-in {
     animation: fadeIn 0.5s ease-out;
+}
+
+.fade-out {
+    animation: fadeOut 0.2s linear forwards;
 }
 
 .hide {
